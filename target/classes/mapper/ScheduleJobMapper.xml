@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pdd.dao.ScheduleJobDao">
+
+    <!-- 查询全部定时任务 -->
+    <select id="GetAllTaskJob" resultType="ScheduleJob">
+        select * from ScheduleJob where job_isdel!=1
+    </select>
+
+    <!-- 添加定时任务-->
+    <insert id="AddTaskJob" parameterType="ScheduleJob">
+        insert into ScheduleJob(job_name,job_group,cron_expression,bean_class,create_time,update_time,job_desc,job_isdel)
+        values (#{job_name},#{job_group},#{cron_expression},#{bean_class},#{create_time},#{update_time},#{job_desc},0)
+    </insert>
+
+    <!-- 修改定时任务状态 -->
+    <update id="UpdateTastJobStat">
+      update ScheduleJob set update_time=now(),job_status=#{job_status} where job_id=#{job_id}
+    </update>
+
+    <!-- 重新编辑定时任务 -->
+    <update id="EditTaskJob">
+        update ScheduleJob set job_name=#{job_name},job_group=#{job_group},cron_expression=#{cron_expression},bean_class=#{bean_class},job_desc=#{job_desc},update_time=now() where job_id=#{job_id}
+    </update>
+
+    <update id="DeleteTaskJob">
+        update ScheduleJob set update_time=now(),job_isdel=1 where job_id=#{job_id}
+    </update>
+
+    <select id="getTaskJobById" resultType="ScheduleJob">
+        select * from ScheduleJob where job_isdel!=1 and  job_id=#{job_id}
+    </select>
+</mapper>
